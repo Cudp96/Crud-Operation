@@ -33,7 +33,7 @@ signBtnEl.addEventListener('click', async(e) => {
     const data = await response.json();
 
     if (data.status){
-        window.location.href = 'loginpage.html';
+        window.location.href = 'index.html';
     }
     else{
         alert(data.message);

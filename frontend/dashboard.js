@@ -9,6 +9,9 @@ const getProducts = async () => {
   //object destructuring
   const { data } = product;
 
+  console.log(data)
+
+  // Looping the individual data to fetch all the products.
   data.forEach((product) => {
     const div = document.createElement("div");
     div.style = "width: 23%";
@@ -56,9 +59,6 @@ const getProducts = async () => {
   // localStorage.setItem("products", JSON.stringify(data));
 };
 
-const editHandler = (prd) => {
-  console.log(prd);
-};
 const editProductEl = document.getElementById("editproductName");
 const editProductDescriptionEl = document.getElementById(
   "editproductDescription"
@@ -70,6 +70,7 @@ const submitEditHandler = (product) => {
   editProductDescriptionEl.value = product.description;
   productId.value = product._id;
 };
+
 const editProductbtnEl = document.querySelector("#editproductbtn");
 editProductbtnEl.addEventListener("click", async(e) => {
   e.preventDefault();
@@ -87,7 +88,7 @@ editProductbtnEl.addEventListener("click", async(e) => {
   }
 
   console.log(editProduct);
-
+// patching the edited product using patch method 
   const response = await fetch(`http://localhost:8080/api/v1/products/${prodId}`, {
     method: "PATCH",
     headers:{
@@ -112,7 +113,7 @@ const submitDeleteHandler = async (product) => {
     }
   );
   const deletedProd = await response.json();
-
+// it will delete the product and reloadthe page
   if (deletedProd.status ){
     window.location.reload();
   }
@@ -150,7 +151,7 @@ const addProductHandler = async (event) => {
   const submittedData = await response.json();
 
   debugger;
-
+  // it will get reloaded after adding the new product
   if (submittedData.status) {
     window.location.reload();
   }
@@ -160,12 +161,12 @@ getProducts();
 
 
 
-
+// adding eventlistener to redirect to login page after clicking on loginbutton
 const logOutBtnEl = document.getElementById('btn');
 
 logOutBtnEl.addEventListener('click', (e)=>{
   e.preventDefault();
-  window.location.href = 'loginpage.html';
+  window.location.href = 'index.html';
 })
 
 // if (localStorage.getItem("products") !== null) {
