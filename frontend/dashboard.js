@@ -9,110 +9,7 @@ const getProducts = async () => {
   //object destructuring
   const { data } = product;
 
-  localStorage.setItem("products", JSON.stringify(data));
-};
-
-const editHandler = (prd) => {
-  console.log(prd);
-};
-const editProductEl = document.getElementById("editproductName");
-const editProductDescriptionEl = document.getElementById(
-  "editproductDescription"
-);
-const productId = document.getElementById('productId');
-//Function called when edit button is clicked
-const submitEditHandler = (product) => {
-  editProductEl.value = product.title;
-  editProductDescriptionEl.value = product.description;
-  productId.value = product._id;
-};
-const editProductbtnEl = document.querySelector("#editproductbtn");
-editProductbtnEl.addEventListener("click", async(e) => {
-  e.preventDefault();
-  const editProductEl = document.getElementById("editproductName").value;
-  const editProductDescriptionEl = document.getElementById(
-    "editproductDescription"
-  ).value;
-  const prodId = productId.value; 
-  
-  
-  let editProduct ={
-   title: editProductEl,
-   description: editProductDescriptionEl,
-   
-  }
-
-  console.log(editProduct);
-
-  const response = await fetch(`http://localhost:8080/api/v1/products/${prodId}`, {
-    method: "PATCH",
-    headers:{
-      'content-type': 'application/json'
-    },
-    body: JSON.stringify(editProduct),
-  });
-  const editProducts = await response.json();
-  debugger
-});
-
-//Function called when delete button is clicked
-const submitDeleteHandler = async (product) => {
-  const response = await fetch(
-    `http://localhost:8080/api/v1/products/${product["_id"]}`,
-    {
-      method: "DELETE",
-    }
-  );
-  const deletedProd = await response.json();
-
-  const prods = localStorage.getItem("products");
-  const filteredProd = JSON.parse(prods).filter((prod) => {
-    return prod._id !== product._id;
-  });
-  console.log(filteredProd);
-};
-
-//This is the button click for add product from the modal.
-const addProductHandler = async (event) => {
-  event.preventDefault();
-  const productName = document.getElementById("productName").value;
-  const productDescription =
-    document.getElementById("productDescription").value;
-  const productImage = document.getElementById("productImage").value;
-
-  let prod = {
-    title: productName,
-    description: productDescription,
-    thumbnail: productImage,
-  };
-
-  //Calling backend POST API for adding new product
-  const response = await fetch("http://localhost:8080/api/v1/products", {
-    headers: {
-      "Content-Type": "application/json",
-    },
-    method: "POST",
-    body: JSON.stringify(prod),
-  });
-
-  const submittedData = await response.json();
-
-  debugger;
-
-  if (submittedData.status) {
-    window.location.reload();
-  }
-};
-
-getProducts();
-
-if (localStorage.getItem("products") !== null) {
-  //getting item from local storage
-  backendProducts = localStorage.getItem("products");
-  const products = JSON.parse(backendProducts);
-
-  // console.log(products)
-  products.forEach((product) => {
+  data.forEach((product) => {
     const div = document.createElement("div");
     div.style = "width: 23%";
     div.className = "card m-2";
@@ -155,6 +52,129 @@ if (localStorage.getItem("products") !== null) {
     const container = document.getElementById("container");
     container.append(div);
   });
-} else {
-  document.getElementById("container").innerHTML = "No data found";
-}
+
+  // localStorage.setItem("products", JSON.stringify(data));
+};
+
+const editHandler = (prd) => {
+  console.log(prd);
+};
+const editProductEl = document.getElementById("editproductName");
+const editProductDescriptionEl = document.getElementById(
+  "editproductDescription"
+);
+const productId = document.getElementById('productId');
+//Function called when edit button is clicked
+const submitEditHandler = (product) => {
+  editProductEl.value = product.title;
+  editProductDescriptionEl.value = product.description;
+  productId.value = product._id;
+};
+const editProductbtnEl = document.querySelector("#editproductbtn");
+editProductbtnEl.addEventListener("click", async(e) => {
+  e.preventDefault();
+  const editProductEl = document.getElementById("editproductName").value;
+  const editProductDescriptionEl = document.getElementById(
+    "editproductDescription"
+  ).value;
+  const prodId = productId.value; 
+  
+  
+  let editProduct ={
+   title: editProductEl,
+   description: editProductDescriptionEl,
+   
+  }
+
+  console.log(editProduct);
+
+  const response = await fetch(`http://localhost:8080/api/v1/products/${prodId}`, {
+    method: "PATCH",
+    headers:{
+      'content-type': 'application/json'
+    },
+    body: JSON.stringify(editProduct),
+  });
+  const editProducts = await response.json();
+
+  if(editProducts.status){
+    window.location.reload();
+  }
+  
+});
+
+//Function called when delete button is clicked
+const submitDeleteHandler = async (product) => {
+  const response = await fetch(
+    `http://localhost:8080/api/v1/products/${product["_id"]}`,
+    {
+      method: "DELETE",
+    }
+  );
+  const deletedProd = await response.json();
+
+  if (deletedProd.status ){
+    window.location.reload();
+  }
+
+  const prods = localStorage.getItem("products");
+  const filteredProd = JSON.parse(prods).filter((prod) => {
+    return prod._id !== product._id;
+  });
+  console.log(filteredProd);
+};
+
+//This is the button click for add product from the modal.
+const addProductHandler = async (event) => {
+  event.preventDefault();
+  const productName = document.getElementById("productName").value;
+  const productDescription =
+    document.getElementById("productDescription").value;
+  const productImage = document.getElementById("productImage").value;
+
+  let prod = {
+    title: productName,
+    description: productDescription,
+    thumbnail: productImage,
+  };
+
+  //Calling backend POST API for adding new product
+  const response = await fetch("http://localhost:8080/api/v1/products", {
+    headers: {
+      "Content-Type": "application/json",
+    },
+    method: "POST",
+    body: JSON.stringify(prod),
+  });
+
+  const submittedData = await response.json();
+
+  debugger;
+
+  if (submittedData.status) {
+    window.location.reload();
+  }
+};
+
+getProducts();
+
+
+
+
+const logOutBtnEl = document.getElementById('btn');
+
+logOutBtnEl.addEventListener('click', (e)=>{
+  e.preventDefault();
+  window.location.href = 'loginpage.html';
+})
+
+// if (localStorage.getItem("products") !== null) {
+//   //getting item from local storage
+//   backendProducts = localStorage.getItem("products");
+//   const products = JSON.parse(backendProducts);
+
+  // console.log(products)
+  
+// } else {
+//   document.getElementById("container").innerHTML = "No data found";
+// }
